@@ -1,0 +1,14 @@
+{
+    "gui.button.filters.scroll_filters_up": "Scroll Filters Up",
+    "gui.button.filters.scroll_filters_down": "Scroll Filters Down",
+    "gui.button.filters.enable_filters": "Enable All Filters",
+    "gui.button.filters.disable_filters": "Disable All Filters",
+    "gui.tag_filter.minecraft.building_blocks.natural": "Natural",
+    "gui.tag_filter.minecraft.building_blocks.stones": "Stones",
+    "gui.tag_filter.minecraft.building_blocks.woods": "Woods",
+    "gui.tag_filter.minecraft.stairs": "Stairs",
+    "gui.tag_filter.minecraft.slabs": "Slabs",
+    "gui.tag_filter.minecraft.decoration_blocks.vegetation": "Vegetation",
+    "gui.tag_filter.minecraft.decoration_blocks.functional": "Functional",
+    "gui.tag_filter.forge.glass": "Glass"
+}
