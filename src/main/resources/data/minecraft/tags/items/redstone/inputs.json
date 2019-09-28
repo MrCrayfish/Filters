@@ -1,0 +1,27 @@
+{
+    "replace": false,
+    "values": [
+        "minecraft:stone_pressure_plate",
+        "minecraft:oak_pressure_plate",
+        "minecraft:spruce_pressure_plate",
+        "minecraft:birch_pressure_plate",
+        "minecraft:jungle_pressure_plate",
+        "minecraft:acacia_pressure_plate",
+        "minecraft:dark_oak_pressure_plate",
+        "minecraft:stone_button",
+        "minecraft:oak_button",
+        "minecraft:spruce_button",
+        "minecraft:birch_button",
+        "minecraft:jungle_button",
+        "minecraft:acacia_button",
+        "minecraft:dark_oak_button",
+        "minecraft:light_weighted_pressure_plate",
+        "minecraft:heavy_weighted_pressure_plate",
+        "minecraft:lever",
+        "minecraft:redstone_torch",
+        "minecraft:tripwire_hook",
+        "minecraft:trapped_chest",
+        "minecraft:daylight_detector",
+        "minecraft:redstone_block"
+    ]
+}

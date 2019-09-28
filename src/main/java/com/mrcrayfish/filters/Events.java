@@ -2,6 +2,7 @@ package com.mrcrayfish.filters;
 
 import com.mrcrayfish.filters.gui.widget.button.IconButton;
 import com.mrcrayfish.filters.gui.widget.button.TagButton;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
@@ -9,6 +10,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -17,7 +20,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /**
  * Author: MrCrayfish
@@ -29,6 +32,7 @@ public class Events
 
     private boolean updatedFilters;
     private List<TagButton> buttons = new ArrayList<>();
+    private Map<ItemGroup, FilterEntry> miscFilterMap = new HashMap<>();
     private Button btnScrollUp;
     private Button btnScrollDown;
     private Button btnEnableAll;
@@ -63,7 +67,7 @@ public class Events
             {
                 CreativeScreen screen = (CreativeScreen) event.getGui();
                 ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-                List<FilterEntry> entries = Filters.get().getFilters(group);
+                List<FilterEntry> entries = this.getFilters(group);
                 if(entries != null)
                 {
                     int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
@@ -79,7 +83,7 @@ public class Events
             {
                 CreativeScreen screen = (CreativeScreen) event.getGui();
                 ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-                List<FilterEntry> entries = Filters.get().getFilters(group);
+                List<FilterEntry> entries = this.getFilters(group);
                 if(entries != null)
                 {
                     int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
@@ -94,7 +98,7 @@ public class Events
             event.addWidget(this.btnEnableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 10, I18n.format("gui.button.filters.enable_filters"), button ->
             {
                 ItemGroup group = this.getGroup(((CreativeScreen) event.getGui()).getSelectedTabIndex());
-                List<FilterEntry> entries = Filters.get().getFilters(group);
+                List<FilterEntry> entries = this.getFilters(group);
                 if(entries != null)
                 {
                     entries.forEach(entry -> entry.setEnabled(true));
@@ -110,7 +114,7 @@ public class Events
             event.addWidget(this.btnDisableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 32, I18n.format("gui.button.filters.disable_filters"), button ->
             {
                 ItemGroup group = this.getGroup(((CreativeScreen) event.getGui()).getSelectedTabIndex());
-                List<FilterEntry> entries = Filters.get().getFilters(group);
+                List<FilterEntry> entries = this.getFilters(group);
                 if(entries != null)
                 {
                     entries.forEach(filters -> filters.setEnabled(false));
@@ -251,7 +255,7 @@ public class Events
         ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
         if(Filters.get().hasFilters(group))
         {
-            List<FilterEntry> entries = Filters.get().getFilters(group);
+            List<FilterEntry> entries = this.getFilters(group);
             int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
             for(int i = scroll; i < scroll + 4 && i < entries.size(); i++)
             {
@@ -270,22 +274,22 @@ public class Events
     private void updateItems(CreativeScreen screen)
     {
         CreativeScreen.CreativeContainer container = screen.getContainer();
-        Set<Item> categorisedItems = new LinkedHashSet<>();
+        Set<Item> filteredItems = new LinkedHashSet<>();
         ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
         if(group != null)
         {
             List<FilterEntry> entries = Filters.get().getFilters(group);
             if(entries != null)
             {
-                for(FilterEntry filter : entries)
+                for(FilterEntry filter : this.getFilters(group))
                 {
                     if(filter.isEnabled())
                     {
-                        categorisedItems.addAll(filter.getItems());
+                        filteredItems.addAll(filter.getItems());
                     }
                 }
                 container.itemList.clear();
-                categorisedItems.forEach(item -> item.fillItemGroup(group, container.itemList));
+                filteredItems.forEach(item -> item.fillItemGroup(group, container.itemList));
                 container.itemList.sort(Comparator.comparingInt(o -> Item.getIdFromItem(o.getItem())));
                 container.scrollTo(0);
             }
@@ -299,21 +303,37 @@ public class Events
             List<FilterEntry> entries = Filters.get().getFilters(group);
             entries.forEach(FilterEntry::clear);
 
-            Stream<Item> stream = ForgeRegistries.ITEMS.getValues().stream()
-                    .filter(item -> item.getGroup() == group);
-            stream.forEach(item ->
+            Set<Item> removed = new HashSet<>();
+            List<Item> items = ForgeRegistries.ITEMS.getValues().stream()
+                .filter(item -> item.getGroup() == group || item == Items.ENCHANTED_BOOK)
+                .collect(Collectors.toList());
+            items.forEach(item ->
             {
-                item.getTags().forEach(location ->
+                for(ResourceLocation location : item.getTags())
                 {
-                    entries.forEach(filter ->
+                    for(FilterEntry filter : entries)
                     {
                         if(location.equals(filter.getTag()))
                         {
                             filter.add(item);
+                            removed.add(item);
                         }
-                    });
-                });
+                    }
+                }
             });
+            items.removeAll(removed);
+
+            if(group.getRelevantEnchantmentTypes().length == 0)
+            {
+                items.remove(Items.ENCHANTED_BOOK);
+            }
+
+            if(!items.isEmpty())
+            {
+                FilterEntry entry = new FilterEntry(new ResourceLocation("miscellaneous"), new ItemStack(Blocks.BARRIER));
+                items.forEach(entry::add);
+                this.miscFilterMap.put(group, entry);
+            }
         });
     }
 
@@ -322,6 +342,20 @@ public class Events
         if(index < 0 || index >= ItemGroup.GROUPS.length)
             return null;
         return ItemGroup.GROUPS[index];
+    }
+
+    private List<FilterEntry> getFilters(ItemGroup group)
+    {
+        if(Filters.get().hasFilters(group))
+        {
+            List<FilterEntry> filters = new ArrayList<>(Filters.get().getFilters(group));
+            if(this.miscFilterMap.containsKey(group))
+            {
+                filters.add(this.miscFilterMap.get(group));
+            }
+            return filters;
+        }
+        return Collections.emptyList();
     }
 
     private void showButtons()

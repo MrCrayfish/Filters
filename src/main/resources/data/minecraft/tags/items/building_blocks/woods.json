@@ -1,6 +1,7 @@
 {
     "replace": false,
     "values": [
+        "minecraft:bookshelf",
         "minecraft:oak_planks",
         "minecraft:spruce_planks",
         "minecraft:birch_planks",
