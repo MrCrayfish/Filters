@@ -15,6 +15,7 @@
     "gui.tag_filter.minecraft.decoration_blocks.functional": "Functional",
     "gui.tag_filter.minecraft.decoration_blocks.fences_and_walls": "Fences & Walls",
     "gui.tag_filter.minecraft.decoration_blocks.interior": "Interior",
+    "gui.tag_filter.minecraft.decoration_blocks.glass": "Glass",
     "gui.tag_filter.minecraft.decoration_blocks.colored": "Colored",
     "gui.tag_filter.minecraft.decoration_blocks.special": "Special",
     "gui.tag_filter.minecraft.redstone.core": "Core",
