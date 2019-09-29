@@ -4,7 +4,7 @@
 
 # Filters
 
-I noticed a lack of support for controller for the Java Edition of Minecraft, this is where Controllable comes in. Controllable adds that ability into the game. This mod has been heavily influenced by the controls in the Bedrock Edition of the game, however it is much more configurable (coming soon) and supports more controllers (coming soon)! There is also an API available for mod developers to add controller support to your own mod.
+Filters introduces filters into the Creative GUI based on tags introduced in Minecraft 1.13. Although creative groups exist, some contain hundreds of items which can make it difficult to locate a specific item. Filters makes it easy to find an item by adding new filter tabs to the left side of the creative screen that allow you to limit the items shown based on the category they fall under. It also uses the new Minecraft tags which makes it easily for players to change them around easily using a resource pack. Mod developers get access to register custom filters for their own mod.. Originally this filter system was an exclusive to MrCrayfish's Furniture Mod however I decided to make it not only a seperate mod because of it's useful functionality.
 
 ### Features:
 * Pre-configured filters for vanilla creative tabs
@@ -16,7 +16,7 @@ I noticed a lack of support for controller for the Java Edition of Minecraft, th
 ![Screenshot 2](https://i.imgur.com/UpKPrUa.png)
 
 ### Developers:
-If you are a developer and want to add Controllable support to your own mod, you can simply do so by adding this to your build.gradle file.
+If you are a developer and want to add Filters support to your own mod, you can simply do so by adding this to your build.gradle file.
 
 ```gradle
 repositories {
