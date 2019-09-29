@@ -65,6 +65,7 @@
         "minecraft:stonecutter",
         "minecraft:bell",
         "minecraft:campfire",
-        "minecraft:ladder"
+        "minecraft:ladder",
+        "minecraft:slime_block"
     ]
 }

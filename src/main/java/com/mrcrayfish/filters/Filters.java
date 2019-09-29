@@ -51,18 +51,21 @@ public class Filters
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/functional"), new ItemStack(Blocks.CRAFTING_TABLE));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/fences_and_walls"), new ItemStack(Blocks.OAK_FENCE));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/interior"), new ItemStack(Blocks.RED_BED));
+        this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/glass"), new ItemStack(Blocks.GLASS_PANE));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/colored"), new ItemStack(Blocks.GREEN_GLAZED_TERRACOTTA));
         this.register(ItemGroup.DECORATIONS, new ResourceLocation("decoration_blocks/special"), new ItemStack(Blocks.DRAGON_HEAD));
-
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/core"), new ItemStack(Items.REDSTONE));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/components"), new ItemStack(Items.STICKY_PISTON));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/inputs"), new ItemStack(Items.TRIPWIRE_HOOK));
         this.register(ItemGroup.REDSTONE, new ResourceLocation("redstone/doors"), new ItemStack(Items.OAK_DOOR));
-
-        //Transportation
+        this.register(ItemGroup.TRANSPORTATION, new ResourceLocation("transportation/vehicles"), new ItemStack(Items.MINECART));
 
         //Miscellaneous
-
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/materials"), new ItemStack(Items.GOLD_INGOT));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/eggs"), new ItemStack(Items.TURTLE_EGG));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/plants_and_seeds"), new ItemStack(Items.SUGAR_CANE));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/dyes"), new ItemStack(Items.RED_DYE));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/discs"), new ItemStack(Items.MUSIC_DISC_MALL));
 
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/raw"), new ItemStack(Items.BEEF));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/cooked"), new ItemStack(Items.COOKED_PORKCHOP));
