@@ -64,6 +64,7 @@
         "minecraft:smithing_table",
         "minecraft:stonecutter",
         "minecraft:bell",
-        "minecraft:campfire"
+        "minecraft:campfire",
+        "minecraft:ladder"
     ]
 }
