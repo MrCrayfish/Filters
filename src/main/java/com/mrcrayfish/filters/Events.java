@@ -63,69 +63,10 @@ public class Events
             this.guiCenterX = ((CreativeScreen) event.getGui()).getGuiLeft();
             this.guiCenterY = ((CreativeScreen) event.getGui()).getGuiTop();
 
-            event.addWidget(this.btnScrollUp = new IconButton(this.guiCenterX - 22, this.guiCenterY - 12, I18n.format("gui.button.filters.scroll_filters_up"), button ->
-            {
-                CreativeScreen screen = (CreativeScreen) event.getGui();
-                ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-                List<FilterEntry> entries = this.getFilters(group);
-                if(entries != null)
-                {
-                    int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
-                    if(scroll > 0)
-                    {
-                        scrollMap.put(group, scroll - 1);
-                        this.updateTagButtons(screen);
-                    }
-                }
-            }, ICONS, 0, 0));
-
-            event.addWidget(this.btnScrollDown = new IconButton(this.guiCenterX - 22, this.guiCenterY + 127, I18n.format("gui.button.filters.scroll_filters_down"), button ->
-            {
-                CreativeScreen screen = (CreativeScreen) event.getGui();
-                ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-                List<FilterEntry> entries = this.getFilters(group);
-                if(entries != null)
-                {
-                    int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
-                    if(scroll <= entries.size() - 4 - 1)
-                    {
-                        scrollMap.put(group, scroll + 1);
-                        this.updateTagButtons(screen);
-                    }
-                }
-            }, ICONS, 16, 0));
-
-            event.addWidget(this.btnEnableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 10, I18n.format("gui.button.filters.enable_filters"), button ->
-            {
-                ItemGroup group = this.getGroup(((CreativeScreen) event.getGui()).getSelectedTabIndex());
-                List<FilterEntry> entries = this.getFilters(group);
-                if(entries != null)
-                {
-                    entries.forEach(entry -> entry.setEnabled(true));
-                    this.buttons.forEach(TagButton::updateState);
-                    Screen screen = Minecraft.getInstance().currentScreen;
-                    if(screen instanceof CreativeScreen)
-                    {
-                        this.updateItems((CreativeScreen) screen);
-                    }
-                }
-            }, ICONS, 32, 0));
-
-            event.addWidget(this.btnDisableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 32, I18n.format("gui.button.filters.disable_filters"), button ->
-            {
-                ItemGroup group = this.getGroup(((CreativeScreen) event.getGui()).getSelectedTabIndex());
-                List<FilterEntry> entries = this.getFilters(group);
-                if(entries != null)
-                {
-                    entries.forEach(filters -> filters.setEnabled(false));
-                    this.buttons.forEach(TagButton::updateState);
-                    Screen screen = Minecraft.getInstance().currentScreen;
-                    if(screen instanceof CreativeScreen)
-                    {
-                        this.updateItems((CreativeScreen) screen);
-                    }
-                }
-            }, ICONS, 48, 0));
+            event.addWidget(this.btnScrollUp = new IconButton(this.guiCenterX - 22, this.guiCenterY - 12, I18n.format("gui.button.filters.scroll_filters_up"), button -> this.scrollUp(), ICONS, 0, 0));
+            event.addWidget(this.btnScrollDown = new IconButton(this.guiCenterX - 22, this.guiCenterY + 127, I18n.format("gui.button.filters.scroll_filters_down"), button -> this.scrollDown(), ICONS, 16, 0));
+            event.addWidget(this.btnEnableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 10, I18n.format("gui.button.filters.enable_filters"), button -> this.enableAllFilters(), ICONS, 32, 0));
+            event.addWidget(this.btnDisableAll = new IconButton(this.guiCenterX - 50, this.guiCenterY + 32, I18n.format("gui.button.filters.disable_filters"), button -> this.disableAllFilters(), ICONS, 48, 0));
 
             this.hideButtons();
 
@@ -242,6 +183,33 @@ public class Events
             else
             {
                 this.hideButtons();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event)
+    {
+        if(event.getGui() instanceof CreativeScreen)
+        {
+            CreativeScreen creativeScreen = (CreativeScreen) event.getGui();
+            int guiLeft = creativeScreen.getGuiLeft();
+            int guiTop = creativeScreen.getGuiTop();
+            int startX = guiLeft - 32;
+            int startY = guiTop + 10;
+            int endX = guiLeft;
+            int endY = startY + 28 * 4 + 3;
+            if(event.getMouseX() >= startX && event.getMouseX() < endX && event.getMouseY() >= startY && event.getMouseY() < endY)
+            {
+                if(event.getScrollDelta() > 0)
+                {
+                    this.scrollUp();
+                }
+                else
+                {
+                    this.scrollDown();
+                }
+                event.setCanceled(true);
             }
         }
     }
@@ -374,5 +342,79 @@ public class Events
         this.btnEnableAll.visible = false;
         this.btnDisableAll.visible = false;
         this.buttons.forEach(button -> button.visible = false);
+    }
+
+    private void scrollUp()
+    {
+        Screen screen = Minecraft.getInstance().currentScreen;
+        if(screen instanceof CreativeScreen)
+        {
+            CreativeScreen creativeScreen = (CreativeScreen) screen;
+            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            List<FilterEntry> entries = this.getFilters(group);
+            if(entries != null)
+            {
+                int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+                if(scroll > 0)
+                {
+                    scrollMap.put(group, scroll - 1);
+                    this.updateTagButtons(creativeScreen);
+                }
+            }
+        }
+    }
+
+    private void scrollDown()
+    {
+        Screen screen = Minecraft.getInstance().currentScreen;
+        if(screen instanceof CreativeScreen)
+        {
+            CreativeScreen creativeScreen = (CreativeScreen) screen;
+            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            List<FilterEntry> entries = this.getFilters(group);
+            if(entries != null)
+            {
+                int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
+                if(scroll <= entries.size() - 4 - 1)
+                {
+                    scrollMap.put(group, scroll + 1);
+                    this.updateTagButtons(creativeScreen);
+                }
+            }
+        }
+    }
+
+    private void enableAllFilters()
+    {
+        Screen screen = Minecraft.getInstance().currentScreen;
+        if(screen instanceof CreativeScreen)
+        {
+            CreativeScreen creativeScreen = (CreativeScreen) screen;
+            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            List<FilterEntry> entries = this.getFilters(group);
+            if(entries != null)
+            {
+                entries.forEach(entry -> entry.setEnabled(true));
+                this.buttons.forEach(TagButton::updateState);
+                this.updateItems(creativeScreen);
+            }
+        }
+    }
+
+    private void disableAllFilters()
+    {
+        Screen screen = Minecraft.getInstance().currentScreen;
+        if(screen instanceof CreativeScreen)
+        {
+            CreativeScreen creativeScreen = (CreativeScreen) screen;
+            ItemGroup group = this.getGroup(creativeScreen.getSelectedTabIndex());
+            List<FilterEntry> entries = this.getFilters(group);
+            if(entries != null)
+            {
+                entries.forEach(filters -> filters.setEnabled(false));
+                this.buttons.forEach(TagButton::updateState);
+                this.updateItems(creativeScreen);
+            }
+        }
     }
 }
