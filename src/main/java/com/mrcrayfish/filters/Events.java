@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -126,6 +127,7 @@ public class Events
         {
             CreativeScreen screen = (CreativeScreen) event.getGui();
             ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+
             if(Filters.get().hasFilters(group))
             {
                 if(!this.viewingFilterTab)
@@ -142,25 +144,34 @@ public class Events
     }
 
     @SubscribeEvent
+    public void onScreenDrawBackground(GuiContainerEvent.DrawBackground event)
+    {
+        if(event.getGuiContainer() instanceof CreativeScreen)
+        {
+            CreativeScreen screen = (CreativeScreen) event.getGuiContainer();
+            ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
+
+            if(Filters.get().hasFilters(group))
+            {
+                /* Render buttons */
+                this.buttons.forEach(button ->
+                {
+                    button.render(event.getMouseX(), event.getMouseY(), Minecraft.getInstance().getRenderPartialTicks());
+                });
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onScreenDrawPost(GuiScreenEvent.DrawScreenEvent.Post event)
     {
         if(event.getGui() instanceof CreativeScreen)
         {
             CreativeScreen screen = (CreativeScreen) event.getGui();
             ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
-            this.guiCenterX = screen.getGuiLeft();
-            this.guiCenterY = screen.getGuiTop();
 
             if(Filters.get().hasFilters(group))
             {
-                this.showButtons();
-
-                /* Render buttons */
-                this.buttons.forEach(button ->
-                {
-                    button.render(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
-                });
-
                 /* Render tooltips after so it renders above buttons */
                 this.buttons.forEach(button ->
                 {
@@ -179,10 +190,6 @@ public class Events
                 {
                     screen.renderTooltip(this.btnDisableAll.getMessage(), event.getMouseX(), event.getMouseY());
                 }
-            }
-            else
-            {
-                this.hideButtons();
             }
         }
     }
@@ -227,7 +234,7 @@ public class Events
             int scroll = scrollMap.computeIfAbsent(group, group1 -> 0);
             for(int i = scroll; i < scroll + 4 && i < entries.size(); i++)
             {
-                TagButton button = new TagButton(this.guiCenterX - 28, this.guiCenterY + 29 * (i - scroll) + 10, entries.get(i), button1 -> this.updateItems(screen));
+                TagButton button = new TagButton(screen.getGuiLeft() - 28, screen.getGuiTop() + 29 * (i - scroll) + 10, entries.get(i), button1 -> this.updateItems(screen));
                 this.buttons.add(button);
             }
             this.btnScrollUp.active = scroll > 0;
