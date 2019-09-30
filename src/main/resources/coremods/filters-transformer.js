@@ -1,6 +1,6 @@
 function initializeCoreMod() {
     return {
-        'minecraft': {
+        'set_creative_tab': {
             'target': {
                 'type': 'CLASS',
                 'name': 'net.minecraft.client.gui.screen.inventory.CreativeScreen'
@@ -13,6 +13,31 @@ function initializeCoreMod() {
                     name: "setCurrentCreativeTab",
                     desc: "(Lnet/minecraft/item/ItemGroup;)V",
                     patch: patch_CreativeScreen_setCurrentCreativeTab
+                }, classNode);
+
+                return classNode;
+            }
+        },
+        'potion_offset': {
+            'target': {
+                'type': 'CLASS',
+                'name': 'net.minecraft.client.gui.DisplayEffectsScreen'
+            },
+            'transformer': function(classNode) {
+                log("Patching DisplayEffectsScreen...");
+
+                patch({
+                    obfName: "func_147044_g",
+                    name: "drawActivePotionEffects",
+                    desc: "()V",
+                    patch: patch_DisplayEffectsScreen_drawActivePotionEffects
+                }, classNode);
+
+                patch({
+                    obfName: "func_175378_g",
+                    name: "updateActivePotionEffects",
+                    desc: "()V",
+                    patch: patch_DisplayEffectsScreen_updateActivePotionEffects
                 }, classNode);
 
                 return classNode;
@@ -72,6 +97,34 @@ function findFirstMethodInsnNode(method, instruction, code) {
     return null;
 }
 
+function findFirstFieldInsnNode(method, instruction) {
+     var foundNode = null;
+     var instructions = method.instructions.toArray();
+     var length = instructions.length;
+     for (var i = 0; i < length; i++) {
+         var node = instructions[i];
+         if(node.getOpcode() == Opcodes.GETFIELD) {
+             if(instruction.matches(node.name) && instruction.desc.equals(node.desc)) {
+                 return node;
+             }
+         }
+     }
+     return null;
+}
+
+function findFirstIntInsnNode(method, instruction, code) {
+     var foundNode = null;
+     var instructions = method.instructions.toArray();
+     var length = instructions.length;
+     for (var i = 0; i < length; i++) {
+         var node = instructions[i];
+         if(node.getOpcode() == code && node.operand == instruction.operand) {
+             return node;
+         }
+     }
+     return null;
+}
+
 function patch_CreativeScreen_setCurrentCreativeTab(method) {
     var findInstruction = {
         obfName: "func_148329_a",
@@ -89,6 +142,42 @@ function patch_CreativeScreen_setCurrentCreativeTab(method) {
         method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 0));
         method.instructions.insert(node, new FieldInsnNode(Opcodes.GETFIELD, "com/mrcrayfish/filters/Filters", "events", "Lcom/mrcrayfish/filters/Events;"));
         method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/filters/Filters", "get", "()Lcom/mrcrayfish/filters/Filters;", false))
+        return true;
+    }
+    return false;
+}
+
+function patch_DisplayEffectsScreen_drawActivePotionEffects(method) {
+    var findInstruction = {
+        obfName: "field_147003_i",
+        name: "guiLeft",
+        desc: "I",
+        matches: function(s) {
+            return s.equals(this.obfName) || s.equals(this.name);
+        }
+    };
+    var node = findFirstFieldInsnNode(method, findInstruction);
+    if(node !== null)
+    {
+        var nextNode = node.getNext();
+        method.instructions.remove(nextNode);
+        method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/filters/Hooks", "getPotionEffectOffset", "(Lnet/minecraft/client/gui/DisplayEffectsScreen;)I", false));
+        method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 0));
+        return true;
+    }
+    return false;
+}
+
+function patch_DisplayEffectsScreen_updateActivePotionEffects(method) {
+    var instruction = {
+        operand: 160
+    };
+    var node = findFirstIntInsnNode(method, instruction, Opcodes.SIPUSH);
+    if(node !== null)
+    {
+        method.instructions.insert(node, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/mrcrayfish/filters/Hooks", "getEffectsGuiOffset", "(Lnet/minecraft/client/gui/DisplayEffectsScreen;)I", false));
+        method.instructions.insert(node, new VarInsnNode(Opcodes.ALOAD, 0));
+        method.instructions.remove(node);
         return true;
     }
     return false;
