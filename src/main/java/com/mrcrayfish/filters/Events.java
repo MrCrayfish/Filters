@@ -113,11 +113,11 @@ public class Events
         {
             if(group != this.currentGroup)
             {
-                this.updateTagButtons(screen);
                 this.updateItems(screen);
                 this.currentGroup = group;
             }
         }
+        this.updateTagButtons(screen);
     }
 
     @SubscribeEvent
@@ -239,6 +239,7 @@ public class Events
             }
             this.btnScrollUp.active = scroll > 0;
             this.btnScrollDown.active = scroll <= entries.size() - 4 - 1;
+            this.showButtons();
         }
         else
         {
