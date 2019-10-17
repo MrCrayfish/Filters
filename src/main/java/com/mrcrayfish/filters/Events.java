@@ -254,20 +254,23 @@ public class Events
         ItemGroup group = this.getGroup(screen.getSelectedTabIndex());
         if(group != null)
         {
-            List<FilterEntry> entries = Filters.get().getFilters(group);
-            if(entries != null)
+            if(Filters.get().hasFilters(group))
             {
-                for(FilterEntry filter : this.getFilters(group))
+                List<FilterEntry> entries = Filters.get().getFilters(group);
+                if(entries != null)
                 {
-                    if(filter.isEnabled())
+                    for(FilterEntry filter : this.getFilters(group))
                     {
-                        filteredItems.addAll(filter.getItems());
+                        if(filter.isEnabled())
+                        {
+                            filteredItems.addAll(filter.getItems());
+                        }
                     }
+                    container.itemList.clear();
+                    filteredItems.forEach(item -> item.fillItemGroup(group, container.itemList));
+                    container.itemList.sort(Comparator.comparingInt(o -> Item.getIdFromItem(o.getItem())));
+                    container.scrollTo(0);
                 }
-                container.itemList.clear();
-                filteredItems.forEach(item -> item.fillItemGroup(group, container.itemList));
-                container.itemList.sort(Comparator.comparingInt(o -> Item.getIdFromItem(o.getItem())));
-                container.scrollTo(0);
             }
         }
     }
