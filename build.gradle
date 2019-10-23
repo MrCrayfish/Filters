@@ -10,7 +10,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-version = '1.1.0-1.14.4'
+version = '1.1.1-1.14.4'
 group = 'com.mrcrayfish'
 archivesBaseName = 'filters'
 
