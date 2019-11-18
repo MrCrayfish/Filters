@@ -4,7 +4,7 @@ issueTrackerURL="https://github.com/MrCrayfish/Filters/issues"
 
 [[mods]]
 modId="filters"
-version="1.1.1"
+version="1.1.2"
 displayName="Filters"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/ModUpdates/master/filters/update.json"
 displayURL="https://mrcrayfish.com"
