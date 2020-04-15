@@ -1,7 +1,7 @@
 {
     "gui.button.filters.scroll_filters_up": "Scrolle Filter hoch",
     "gui.button.filters.scroll_filters_down": "Scrolle Filter runter",
-    "gui.button.filters.enable_filters": "Enable All Filters",
+    "gui.button.filters.enable_filters": "Aktiviere alle Filter",
     "gui.button.filters.disable_filters": "Deaktiviere alle Filter",
     "gui.tag_filter.minecraft.miscellaneous": "Verschiedenes",
     "gui.tag_filter.minecraft.building_blocks.natural": "Nat\u00fcrliches",
