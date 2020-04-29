@@ -53,8 +53,8 @@ public class TagButton extends Button
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param);
 
         int width = this.toggled ? 32 : 28;
         int textureX = 28;
@@ -62,7 +62,7 @@ public class TagButton extends Button
         this.drawRotatedTexture(this.x, this.y, textureX, textureY, width, 28);
 
         GlStateManager.enableRescaleNormal();
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.enableStandardItemLighting();
         ItemRenderer renderer = mc.getItemRenderer();
         renderer.zLevel = 100.0F;
         renderer.renderItemAndEffectIntoGUI(this.stack, x + 8, y + 6);
@@ -77,10 +77,10 @@ public class TagButton extends Button
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos((double)(x), (double)(y + height), 0.0).tex((double)((float)(textureX + height) * scaleX), (double)((float)(textureY) * scaleY)).endVertex();
-        bufferbuilder.pos((double)(x + width), (double)(y + height), 0.0).tex((double)((float)(textureX + height) * scaleX), (double)((float)(textureY + width) * scaleY)).endVertex();
-        bufferbuilder.pos((double)(x + width), (double)(y), 0.0).tex((double)((float)(textureX) * scaleX), (double)((float)(textureY + width) * scaleY)).endVertex();
-        bufferbuilder.pos((double)(x), (double)(y), 0.0).tex((double)((float)(textureX) * scaleX), (double)((float)(textureY) * scaleY)).endVertex();
+        bufferbuilder.pos((double)(x), (double)(y + height), 0.0).tex(((float)(textureX + height) * scaleX), ((float)(textureY) * scaleY)).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y + height), 0.0).tex(((float)(textureX + height) * scaleX), ((float)(textureY + width) * scaleY)).endVertex();
+        bufferbuilder.pos((double)(x + width), (double)(y), 0.0).tex(((float)(textureX) * scaleX), ((float)(textureY + width) * scaleY)).endVertex();
+        bufferbuilder.pos((double)(x), (double)(y), 0.0).tex((((float)(textureX) * scaleX)), ((float)(textureY) * scaleY)).endVertex();
         tessellator.draw();
     }
 

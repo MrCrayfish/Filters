@@ -10,14 +10,14 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-version = '1.1.2-1.14.4'
+version = '1.2.0-1.15.2'
 group = 'com.mrcrayfish'
 archivesBaseName = 'filters'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20200425-1.15.1'
     
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -72,12 +72,12 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.49'
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-1.14.4:${jei_version}:api")
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:${jei_version}")
 }
 
 jar {
