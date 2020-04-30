@@ -1,6 +1,7 @@
 package com.mrcrayfish.filters.gui.widget.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mrcrayfish.filters.FilterEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
@@ -49,19 +50,18 @@ public class TagButton extends Button
     {
         Minecraft mc = Minecraft.getInstance();
         mc.getTextureManager().bindTexture(TABS);
-
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, this.alpha);
-        GlStateManager.disableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+        RenderSystem.disableLighting();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param, GlStateManager.SourceFactor.ONE.param, GlStateManager.DestFactor.ZERO.param);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA.param);
 
         int width = this.toggled ? 32 : 28;
         int textureX = 28;
         int textureY = this.toggled ? 32 : 0;
         this.drawRotatedTexture(this.x, this.y, textureX, textureY, width, 28);
 
-        GlStateManager.enableRescaleNormal();
+        RenderSystem.enableRescaleNormal();
         RenderHelper.enableStandardItemLighting();
         ItemRenderer renderer = mc.getItemRenderer();
         renderer.zLevel = 100.0F;
