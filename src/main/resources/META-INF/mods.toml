@@ -1,10 +1,10 @@
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[31,)"
 issueTrackerURL="https://github.com/MrCrayfish/Filters/issues"
 
 [[mods]]
 modId="filters"
-version="1.1.2"
+version="1.2.0"
 displayName="Filters"
 updateJSONURL="https://raw.githubusercontent.com/MrCrayfish/ModUpdates/master/filters/update.json"
 displayURL="https://mrcrayfish.com"
@@ -18,12 +18,12 @@ A mod that improves the Creative GUI by introducing filters based on tags
 [[dependencies.filters]] #optional
     modId="forge"
     mandatory=true
-    versionRange="[28,)"
+    versionRange="[31,)"
     ordering="NONE"
     side="CLIENT"
 [[dependencies.filters]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.14.4]"
+    versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"
