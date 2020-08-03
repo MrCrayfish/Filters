@@ -63,6 +63,7 @@ public class Filters
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/plants_and_seeds"), new ItemStack(Items.SUGAR_CANE));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/dyes"), new ItemStack(Items.RED_DYE));
         this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/discs"), new ItemStack(Items.MUSIC_DISC_MALL));
+        this.register(ItemGroup.MISC, new ResourceLocation("miscellaneous/banner_patterns"), new ItemStack(Items.FLOWER_BANNER_PATTERN));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/raw"), new ItemStack(Items.BEEF));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/cooked"), new ItemStack(Items.COOKED_PORKCHOP));
         this.register(ItemGroup.FOOD, new ResourceLocation("foodstuffs/special"), new ItemStack(Items.GOLDEN_APPLE));
