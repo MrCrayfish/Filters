@@ -7,12 +7,13 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -26,18 +27,22 @@ public class Filters
 {
     private static Filters instance;
 
-    private Map<ItemGroup, Set<FilterEntry>> filterMap = new HashMap<>();
+    @OnlyIn(Dist.CLIENT)
+    private Map<ItemGroup, Set<FilterEntry>> filterMap;
+    @OnlyIn(Dist.CLIENT)
     public Events events;
 
     public Filters()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
-        MinecraftForge.EVENT_BUS.register(this.events = new Events());
         Filters.instance = this;
     }
 
     private void onClientSetup(FMLClientSetupEvent event)
     {
+        this.filterMap = new HashMap<>();
+        MinecraftForge.EVENT_BUS.register(this.events = new Events());
+
         this.register(ItemGroup.BUILDING_BLOCKS, new ResourceLocation("building_blocks/natural"), new ItemStack(Blocks.GRASS_BLOCK));
         this.register(ItemGroup.BUILDING_BLOCKS, new ResourceLocation("building_blocks/stones"), new ItemStack(Blocks.STONE));
         this.register(ItemGroup.BUILDING_BLOCKS, new ResourceLocation("building_blocks/woods"), new ItemStack(Blocks.OAK_LOG));
@@ -83,22 +88,25 @@ public class Filters
         return instance;
     }
 
-    public void register(ItemGroup group, @Nullable ResourceLocation tag, ItemStack icon)
+    @OnlyIn(Dist.CLIENT)
+    public void register(ItemGroup group, ResourceLocation tag, ItemStack icon)
     {
-        Set<FilterEntry> entries = this.filterMap.computeIfAbsent(group, itemGroup -> new LinkedHashSet<>());
-        entries.add(new FilterEntry(tag, icon));
+        this.filterMap.computeIfAbsent(group, itemGroup -> new LinkedHashSet<>()).add(new FilterEntry(tag, icon));
     }
 
+    @OnlyIn(Dist.CLIENT)
     public Set<ItemGroup> getGroups()
     {
         return ImmutableSet.copyOf(this.filterMap.keySet());
     }
 
+    @OnlyIn(Dist.CLIENT)
     public ImmutableList<FilterEntry> getFilters(ItemGroup group)
     {
         return ImmutableList.copyOf(this.filterMap.get(group));
     }
 
+    @OnlyIn(Dist.CLIENT)
     public boolean hasFilters(ItemGroup group)
     {
         return this.filterMap.containsKey(group);
