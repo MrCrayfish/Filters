@@ -18,7 +18,7 @@
     "gui.tag_filter.minecraft.decoration_blocks.glass": "Scheiben",
     "gui.tag_filter.minecraft.decoration_blocks.colored": "Farbiges",
     "gui.tag_filter.minecraft.decoration_blocks.special": "Spezial",
-    "gui.tag_filter.minecraft.redstone.core": "Basis",
+    "gui.tag_filter.minecraft.redstone.core": "Kern",
     "gui.tag_filter.minecraft.redstone.components": "Komponenten",
     "gui.tag_filter.minecraft.redstone.inputs": "Eing\u00e4nge",
     "gui.tag_filter.minecraft.redstone.doors": "T\u00fcren",
