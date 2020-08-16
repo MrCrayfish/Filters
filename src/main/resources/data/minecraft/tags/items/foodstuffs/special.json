@@ -3,6 +3,7 @@
     "values": [
         "minecraft:golden_apple",
         "minecraft:enchanted_golden_apple",
-        "minecraft:poisonous_potato"
+        "minecraft:poisonous_potato",
+        "minecraft:honey_bottle"
     ]
 }

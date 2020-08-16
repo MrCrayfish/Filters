@@ -2,6 +2,7 @@
     "replace": false,
     "values": [
         "minecraft:bat_spawn_egg",
+        "minecraft:bee_spawn_egg",
         "minecraft:blaze_spawn_egg",
         "minecraft:cat_spawn_egg",
         "minecraft:cave_spider_spawn_egg",
